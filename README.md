@@ -1,8 +1,8 @@
-# 💰 Expense Tracker
+# 💰 Multi- Tenancy Leisure Management System
 
 
 
-A full-stack web application for tracking personal expenses with multi-user support, real-time analytics, and data visualization.
+A full-stack web application for tracking with multi-user support, real-time analytics, and data visualization.
 
 
 
@@ -24,19 +24,19 @@ A full-stack web application for tracking personal expenses with multi-user supp
 
 ### 📊 Dashboard
 
-- Interactive charts showing monthly spending trends
+- Interactive charts showing monthly leisure spending trends
 
-- Category-wise expense breakdown (pie chart)
+- Category-wise leisure expense breakdown (pie chart)
 
 - Year-over-year spending comparison
 
-- Calendar view with expense highlights
+- Calendar view with highlights
 
 - Real-time KPI metrics
 
 
 
-### 💵 Expense Management
+### 💵 Leisure Expense Management
 
 - Add, edit, and delete expenses
 
@@ -66,9 +66,9 @@ A full-stack web application for tracking personal expenses with multi-user supp
 
 - Remaining budget calculation
 
-- Planned expenses (To-Do list) with completion tracking
+- To-Do list with completion tracking
 
-- Month-over-month financial overview
+- Month-over-month financial lesiure overview
 
 
 
@@ -216,7 +216,7 @@ A full-stack web application for tracking personal expenses with multi-user supp
 
 
 
-### Managing Expenses
+### Managing Leisure Expenditures
 
 1. Navigate to **Expenses** tab
 
