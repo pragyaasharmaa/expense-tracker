@@ -58,6 +58,7 @@
       <a class="active" id="nav-dashboard" onclick="showDashboard()">Dashboard</a>
       <a id="nav-expenses" onclick="showExpenses()">Expenses</a>
       <a id="nav-summary" onclick="showSummary()">Summary</a>
+      <a id="nav-chatbot" onclick="toggleChatPanel()">🤖 AI Chat</a>
     </nav>
     <button class="logout-btn" onclick="logout()">Logout</button>
   </aside>
@@ -232,6 +233,47 @@
       <strong>Total:</strong>
       <span id="modalTotal">₹0</span>
     </div>
+  </div>
+</div>
+
+<!-- 🤖 CHATBOT FLOATING BUTTON -->
+<button id="chatToggleBtn" class="chat-toggle-btn" onclick="toggleChatPanel()" style="display:none;">
+  🤖
+</button>
+
+<!-- 🤖 CHATBOT PANEL -->
+<div id="chatPanel" class="chat-panel" style="display:none;">
+  <div class="chat-panel-header">
+    <div class="chat-header-info">
+      <span class="chat-bot-avatar">🤖</span>
+      <div>
+        <h3>Finance Assistant</h3>
+        <span class="chat-status">Online</span>
+      </div>
+    </div>
+    <button class="chat-close-btn" onclick="toggleChatPanel()">✕</button>
+  </div>
+
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-bubble bot">
+      <span class="bubble-avatar">🤖</span>
+      <div class="bubble-content">
+        👋 Hi! I'm your financial assistant. Ask me anything about your expenses!
+        <div class="bubble-time">Just now</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-suggestions" id="chatSuggestions">
+    <button onclick="sendSuggestion('How much did I spend this month?')">💰 Monthly total</button>
+    <button onclick="sendSuggestion('Show my category breakdown')">📊 Categories</button>
+    <button onclick="sendSuggestion('Where can I save money?')">💡 Save tips</button>
+  </div>
+
+  <div class="chat-input-area">
+    <input type="text" id="chatInput" placeholder="Ask about your expenses..."
+           onkeypress="if(event.key==='Enter') sendChatMessage()" />
+    <button class="chat-send-btn" onclick="sendChatMessage()">➤</button>
   </div>
 </div>
 

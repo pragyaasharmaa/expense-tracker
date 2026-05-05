@@ -902,3 +902,169 @@ function renderYearComparisonChart(expenses) {
 function toggleTheme() {
   document.body.classList.toggle("light");
 }
+
+/* ================================
+   🤖 CHATBOT
+================================ */
+let chatPanelOpen = false;
+
+function toggleChatPanel() {
+  const panel = document.getElementById("chatPanel");
+  const btn = document.getElementById("chatToggleBtn");
+  if (!panel) return;
+
+  chatPanelOpen = !chatPanelOpen;
+  panel.style.display = chatPanelOpen ? "flex" : "none";
+
+  // Highlight sidebar nav
+  const navChat = document.getElementById("nav-chatbot");
+  if (navChat) {
+    if (chatPanelOpen) {
+      navChat.classList.add("active");
+    } else {
+      navChat.classList.remove("active");
+    }
+  }
+
+  if (chatPanelOpen) {
+    const input = document.getElementById("chatInput");
+    if (input) input.focus();
+    scrollChatToBottom();
+  }
+}
+
+// Show floating button after login
+const originalShowDashboardFn = showDashboard;
+showDashboard = function() {
+  originalShowDashboardFn();
+  const btn = document.getElementById("chatToggleBtn");
+  if (btn) btn.style.display = "block";
+};
+
+function sendSuggestion(text) {
+  const input = document.getElementById("chatInput");
+  if (input) input.value = text;
+  sendChatMessage();
+}
+
+function sendChatMessage() {
+  const input = document.getElementById("chatInput");
+  if (!input) return;
+
+  const message = input.value.trim();
+  if (!message) return;
+
+  // Add user bubble
+  addChatBubble("user", message);
+  input.value = "";
+
+  // Show typing indicator
+  showTypingIndicator();
+
+  // Call API
+  fetch(`${API_BASE}/api/chat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: currentUsername,
+      message: message
+    })
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Chat request failed");
+      return res.json();
+    })
+    .then(data => {
+      removeTypingIndicator();
+      addChatBubble("bot", data.reply, data.detectedIntent, data.confidence);
+      updateSuggestions(data.suggestions || []);
+    })
+    .catch(err => {
+      removeTypingIndicator();
+      addChatBubble("bot", "😅 Sorry, something went wrong. Please try again.");
+      console.error("Chat error:", err);
+    });
+}
+
+function addChatBubble(role, text, intent, confidence) {
+  const container = document.getElementById("chatMessages");
+  if (!container) return;
+
+  const bubble = document.createElement("div");
+  bubble.className = `chat-bubble ${role}`;
+
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+  const avatar = role === "bot" ? "🤖" : "👤";
+
+  let intentBadge = "";
+  if (intent && role === "bot") {
+    const pct = confidence ? Math.round(confidence * 100) : 0;
+    intentBadge = `<div class="intent-badge">${intent} • ${pct}%</div>`;
+  }
+
+  bubble.innerHTML = `
+    <span class="bubble-avatar">${avatar}</span>
+    <div class="bubble-content">
+      ${escapeHtml(text)}
+      ${intentBadge}
+      <div class="bubble-time">${timeStr}</div>
+    </div>
+  `;
+
+  container.appendChild(bubble);
+  scrollChatToBottom();
+}
+
+function showTypingIndicator() {
+  const container = document.getElementById("chatMessages");
+  if (!container) return;
+
+  const typing = document.createElement("div");
+  typing.className = "chat-bubble bot";
+  typing.id = "typingIndicator";
+  typing.innerHTML = `
+    <span class="bubble-avatar">🤖</span>
+    <div class="bubble-content">
+      <div class="typing-indicator">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  `;
+  container.appendChild(typing);
+  scrollChatToBottom();
+}
+
+function removeTypingIndicator() {
+  const typing = document.getElementById("typingIndicator");
+  if (typing) typing.remove();
+}
+
+function updateSuggestions(suggestions) {
+  const container = document.getElementById("chatSuggestions");
+  if (!container) return;
+
+  container.innerHTML = "";
+  suggestions.forEach(s => {
+    const btn = document.createElement("button");
+    btn.textContent = s;
+    btn.onclick = () => sendSuggestion(s);
+    container.appendChild(btn);
+  });
+}
+
+function scrollChatToBottom() {
+  const container = document.getElementById("chatMessages");
+  if (container) {
+    setTimeout(() => {
+      container.scrollTop = container.scrollHeight;
+    }, 50);
+  }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}

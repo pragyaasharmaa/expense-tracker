@@ -23,6 +23,9 @@ public class SecurityConfig {
                         // Expense APIs TEMPORARILY open (JWT will be added later)
                         .requestMatchers("/expenses/**").permitAll()
 
+                        // Chatbot API
+                        .requestMatchers("/api/chat/**").permitAll()
+
                         // Allow frontend static files (index.html, js, css)
                         .requestMatchers(
                                 "/",
