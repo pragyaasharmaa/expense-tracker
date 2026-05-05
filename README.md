@@ -68,7 +68,27 @@ A full-stack web application for tracking with multi-user support, real-time ana
 
 - To-Do list with completion tracking
 
-- Month-over-month financial lesiure overview
+- Month-over-month financial leisure overview
+
+
+
+### 🤖 AI Chatbot (Rule-Based NLP)
+
+- **Intelligent query understanding** using weighted keyword matching + regex pattern detection
+
+- **11 supported intents**: monthly totals, category analysis, month comparison, saving suggestions, top expenses, daily trends, spending summary, income status, greeting, help, and fallback
+
+- **Context-aware responses** using real user data from the database
+
+- **Dynamic suggestion pills** that update after each response
+
+- **Chat history** (last 5 exchanges per user, in-memory)
+
+- **Confidence scoring** — shows detected intent and match confidence
+
+- **Zero external APIs** — no OpenAI, no paid services, pure Java logic
+
+- Beautiful floating chat widget with typing indicator animation
 
 
 
@@ -254,13 +274,25 @@ A full-stack web application for tracking with multi-user support, real-time ana
 
 ```
 
-Leisure Tracker/
+Expense Tracker/
 
 ├── src/
 
 │   ├── main/
 
 │   │   ├── java/com/pragya/expensetracker/
+
+│   │   │   ├── ai/               # 🤖 Chatbot NLP engine
+
+│   │   │   │   ├── Intent.java           # Intent enum (11 intents)
+
+│   │   │   │   ├── IntentResult.java      # Detection result DTO
+
+│   │   │   │   ├── IntentDetector.java    # Keyword + regex scoring
+
+│   │   │   │   ├── ResponseBuilder.java   # Template response generator
+
+│   │   │   │   └── ChatHistoryManager.java # Per-user chat history
 
 │   │   │   ├── config/           # Security configuration
 
@@ -348,6 +380,54 @@ Leisure Tracker/
 
 
 
+### 🤖 AI Chatbot
+
+- `POST /api/chat` - Send a message and get AI-like response
+
+- `POST /api/chat/reset?username={username}` - Clear chat history
+
+- `GET /api/chat/history?username={username}` - Get chat history
+
+
+
+**Example Request:**
+
+```json
+
+POST /api/chat
+
+{
+
+  "username": "pragya",
+
+  "message": "How much did I spend this month?"
+
+}
+
+```
+
+
+
+**Example Response:**
+
+```json
+
+{
+
+  "reply": "💰 In May 2026, you spent ₹7,099.00 across 5 transactions...",
+
+  "detectedIntent": "Monthly Total Spending",
+
+  "confidence": 0.7,
+
+  "suggestions": ["Show my category breakdown", "Compare with last month"]
+
+}
+
+```
+
+
+
 ## 🎨 Features Highlights
 
 
@@ -377,6 +457,8 @@ Switch between dark and light modes for comfortable viewing.
 
 
 ### Planned Features
+
+- [x] AI Chatbot with NLP-based intent detection
 
 - [ ] Export data to Excel/PDF
 
