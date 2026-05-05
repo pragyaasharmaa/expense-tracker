@@ -1,4 +1,4 @@
-# 💰 Multi- Tenancy Leisure Management System
+# 💰 Leisure Management System
 
 
 
